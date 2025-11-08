@@ -1,0 +1,146 @@
+<style>
+  .modal-consumo {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 900px;
+    margin: auto;
+    box-shadow: 0 0 20px rgba(0,0,0,0.2);
+  }
+
+  .modal-header {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 15px;
+  }
+
+  th {
+    background: #e4e4e4;
+    padding: 8px;
+    font-size: 14px;
+    text-transform: uppercase;
+    border: 1px solid #ccc;
+  }
+
+  td {
+    padding: 6px;
+    border: 1px solid #ccc;
+  }
+
+  select, input, textarea {
+    width: 100%;
+    padding: 7px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+
+  textarea {
+    height: 70px;
+    resize: none;
+  }
+
+  .btn-red {
+    background: #e74c3c;
+    color: white;
+    border: none;
+    padding: 7px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .btn-green {
+    background: #27ae60;
+    color: white;
+    border: none;
+    padding: 7px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .btn-gray {
+    background: #bdc3c7;
+    color: black;
+    border: none;
+    padding: 7px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .btns-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+</style>
+
+<div class="modal-consumo">
+
+  <div class="modal-header">Nuevo consumo</div>
+
+  <!-- TABLA -->
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 60%;">COD — PRODUCTO</th>
+        <th style="width: 20%;">STOCK</th>
+        <th style="width: 20%;">CANTIDAD</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>
+          <select>
+            <option value="">Seleccione un producto</option>
+            <option>Sulfato</option>
+            <option>Ácido fosfórico</option>
+            <option>Nitrato de calcio</option>
+          </select>
+        </td>
+        <td><input type="text" placeholder="0" disabled></td>
+        <td><input type="number" placeholder="0"></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- BOTONES DE RENGLÓN -->
+  <div style="margin-bottom: 20px;">
+    <button class="btn-red">Borrar renglón</button>
+    <button class="btn-green">Nuevo renglón</button>
+  </div>
+
+  <!-- DEPARTAMENTO -->
+  <div style="display: flex; align-items: center; margin-bottom: 10px;">
+    <label style="width: 150px; font-weight:bold;">Departamento:</label>
+    <select>
+      <option value="">SELECCIONE…</option>
+      <option>Riego</option>
+      <option>Invernadero</option>
+      <option>Empaque</option>
+      <option>Control de plagas</option>
+    </select>
+  </div>
+
+  <!-- NOTAS -->
+  <div style="display: flex; margin-bottom: 20px;">
+    <label style="width: 150px; font-weight:bold;">Notas:</label>
+    <textarea placeholder="Notas opcionales"></textarea>
+  </div>
+
+  <!-- BOTONES FINALES -->
+  <div class="btns-footer">
+    <button class="btn-gray">Limpiar</button>
+    <button class="btn-green">Registrar</button>
+  </div>
+
+</div>
+

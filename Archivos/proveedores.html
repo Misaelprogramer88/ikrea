@@ -1,0 +1,192 @@
+<style>
+  .card{
+    background:white;
+    padding:20px;
+    border-radius:10px;
+    box-shadow:0 0 10px rgba(0,0,0,0.1);
+    margin-top:20px;
+  }
+
+  .form{
+    margin-top:20px;
+  }
+
+  .row{
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap:15px;
+    margin-bottom:15px;
+  }
+
+  label{
+    font-weight:bold;
+    font-size:14px;
+    margin-bottom:5px;
+  }
+
+  input, select{
+    width:100%;
+    padding:8px;
+    border:1px solid #ccc;
+    border-radius:5px;
+    font-size:14px;
+    margin-bottom:10px;
+  }
+
+  button{
+    padding:10px 20px;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+    font-size:15px;
+  }
+
+  button[type="reset"]{
+    background:#999;
+    color:white;
+  }
+
+  button[type="submit"]{
+    background:#28a745;
+    color:white;
+  }
+
+  button:hover{
+    opacity:0.8;
+  }
+
+  @media(max-width:900px){
+    .row{
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media(max-width:600px){
+    .row{
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<h1>Consumos</h1>
+
+<div class="card">
+  <h2>Nuevo Proveedor</h2>
+
+  <form class="form">
+
+    <div class="row">
+      <div>
+        <label>Nombre(s):</label>
+        <input type="text" placeholder="Nombre(s)">
+      </div>
+
+      <div>
+        <label>Email:</label>
+        <input type="email" placeholder="Email">
+      </div>
+
+      <div>
+        <label>Teléfono:</label>
+        <input type="text" placeholder="#">
+      </div>
+
+      <div>
+        <label>Días de crédito:</label>
+        <input type="number" placeholder="Días de crédito">
+      </div>
+    </div>
+
+    <div class="row">
+      <div>
+        <label>Nombre comercial:</label>
+        <input type="text" placeholder="Nombre comercial">
+      </div>
+
+      <div>
+        <label>RFC:</label>
+        <input type="text" placeholder="RFC">
+      </div>
+
+      <div>
+        <label>CURP:</label>
+        <input type="text" placeholder="CURP">
+      </div>
+
+      <div>
+        <label>Dirección:</label>
+        <input type="text" placeholder="Dirección">
+      </div>
+    </div>
+
+    <div class="row">
+      <div>
+        <label>Ciudad:</label>
+        <input type="text" placeholder="Ciudad">
+      </div>
+
+      <div>
+        <label>Localidad:</label>
+        <input type="text" placeholder="Localidad">
+      </div>
+
+      <div>
+        <label>Código postal:</label>
+        <input type="text" placeholder="#">
+      </div>
+
+      <div>
+        <label>Nombre del contacto:</label>
+        <input type="text" placeholder="Nombre del contacto">
+      </div>
+    </div>
+
+    <div class="row">
+      <div>
+        <label>Teléfono del contacto:</label>
+        <input type="text" placeholder="Telefono">
+      </div>
+
+      <div>
+        <label>Límite del crédito:</label>
+        <input type="number" placeholder="$">
+      </div>
+    </div>
+
+    <h3>Información bancaria</h3>
+
+    <div class="row">
+      <div>
+        <label>Clave proveedor banco:</label>
+        <input type="text" placeholder="Clave proveedor banco">
+      </div>
+
+      <div>
+        <label>Cuenta o CLABE:</label>
+        <input type="text" placeholder="Cuenta o CLABE">
+      </div>
+
+      <div>
+        <label>Filtro:</label>
+        <input type="text" placeholder="Filtro">
+      </div>
+
+      <div>
+        <label>Tipo TXT:</label>
+        <select>
+          <option>Seleccione...</option>
+          <option>Tipo 1</option>
+          <option>Tipo 2</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row" style="grid-template-columns: repeat(2, 1fr);">
+      <button type="reset">Limpiar</button>
+      <button type="submit">Registrar</button>
+    </div>
+
+  </form>
+
+</div>
+

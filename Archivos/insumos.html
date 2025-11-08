@@ -1,0 +1,168 @@
+<?php include "conexion.php"; ?>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Insumos</title>
+
+<style>
+  .card{
+    background:white;
+    padding:20px;
+    border-radius:10px;
+    box-shadow:0 0 10px rgba(0,0,0,0.1);
+    margin-top:20px;
+  }
+
+  .form{
+    margin-top:20px;
+  }
+
+  .row{
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap:15px;
+    margin-bottom:15px;
+  }
+
+  label{
+    font-weight:bold;
+    font-size:14px;
+    margin-bottom:5px;
+  }
+
+  input, select, textarea{
+    width:100%;
+    padding:8px;
+    border:1px solid #ccc;
+    border-radius:5px;
+    font-size:14px;
+    margin-bottom:10px;
+  }
+
+  textarea{
+    resize:none;
+    height:40px;
+  }
+
+  button{
+    padding:10px 20px;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+    font-size:15px;
+  }
+
+  button[type="reset"]{
+    background:#999;
+    color:white;
+  }
+
+  button[type="submit"]{
+    background:#28a745;
+    color:white;
+  }
+
+  button:hover{
+    opacity:0.8;
+  }
+
+  @media(max-width:900px){
+    .row{
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media(max-width:600px){
+    .row{
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+</head>
+
+<body>
+
+<h1>Insumos</h1>
+
+<div class="card">
+  <h2>Nuevo Insumo</h2>
+
+  <form id="formInsumo" class="form">
+
+    <div class="row">
+
+      <div>
+        <label>Nombre del insumo:</label>
+        <input type="text" id="nombre" name="nombre" placeholder="Nombre del insumo">
+      </div>
+
+      <div>
+        <label>Función:</label>
+        <input type="text" id="funcion" name="funcion" placeholder="Función del insumo">
+      </div>
+
+      <div>
+        <label>¿Es fertilizante?</label>
+        <select id="fertilizante" name="fertilizante">
+          <option value="">Seleccione...</option>
+          <option value="si">Sí</option>
+          <option value="no">No</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Notas:</label>
+        <textarea id="notas" name="notas" placeholder="Notas opcionales"></textarea>
+      </div>
+
+    </div>
+
+    <div class="row" style="grid-template-columns: repeat(2, 1fr);">
+      <button type="reset">Limpiar</button>
+      <button type="submit">Registrar</button>
+    </div>
+
+  </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<script>
+$("#formInsumo").submit(function(e){
+    e.preventDefault();
+
+    let datos = {
+        nombre: $("#nombre").val(),
+        funcion: $("#funcion").val(),
+        fertilizante: $("#fertilizante").val(),
+        notas: $("#notas").val(),
+        tipo: "MANUAL"
+    };
+
+    $.ajax({
+        url: "guardar_insumo.php",
+        method: "POST",
+        data: datos,
+        success: function(res){
+            if(res.trim() === "OK"){
+                alert("Insumo registrado correctamente");
+                $("#formInsumo")[0].reset();
+            } else {
+                alert("Error: " + res);
+            }
+        },
+        error: function(){
+            alert("Error al conectar con el servidor");
+        }
+    });
+
+});
+</script>
+
+</body>
+</html>
+
+
+

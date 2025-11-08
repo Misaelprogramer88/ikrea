@@ -1,0 +1,325 @@
+<?php
+include "conexion.php"; 
+?>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Orden de Compra</title>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+
+</head>
+
+<body class="bg-light p-4">
+
+<div class="container bg-white p-4 rounded shadow">
+    <h3 class="mb-4">Orden de Compra</h3>
+
+    <!-- FORMULARIO -->
+    <div class="row mb-3">
+        <div class="col-md-3">
+            <label class="form-label">Emisor</label>
+            <input type="text" id="emisor" class="form-control">
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Proveedor</label>
+            <input type="text" id="proveedor" class="form-control">
+        </div>
+        <div class="col-md-2">
+            <label class="form-label">Días crédito</label>
+            <input type="number" class="form-control" id="dias_credito" />
+        </div>
+        <div class="col-md-2">
+            <label class="form-label">Moneda</label>
+            <input type="text" id="moneda" class="form-control">
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">¿Consumir OC?</label><br />
+        <input class="form-check-input" type="radio" name="consumir" value="1"> Sí
+        <input class="form-check-input" type="radio" name="consumir" value="0" checked> No
+    </div>
+
+    <h5>Detalles</h5>
+    <table class="table table-bordered" id="tablaDetalles">
+        <thead>
+            <tr>
+                <th>Cantidad</th>
+                <th>Producto</th>
+                <th>Precio Unitario</th>
+                <th>Total</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><input type="number" class="form-control cantidad" value="1" /></td>
+                <td><input type="text" class="form-control producto" /></td>
+                <td><input type="number" class="form-control precio" value="0" /></td>
+                <td><input type="number" class="form-control total" readonly /></td>
+                <td><button class="btn btn-danger btn-sm borrarFila">X</button></td>
+            </tr>
+        </tbody>
+    </table>
+    <button class="btn btn-success mb-3" id="nuevaFila">Nuevo renglón</button>
+
+    <h5>Impuestos</h5>
+    <div class="row mb-3">
+        <div class="col-md-3">
+            <label class="form-label">IVA</label>
+            <input type="number" id="iva" class="form-control" value="16" />
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Monto IVA</label>
+            <input type="number" id="monto_iva" class="form-control" readonly />
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-3">
+            <label>No. factura</label>
+            <input type="text" class="form-control" id="factura" />
+        </div>
+        <div class="col-md-3">
+            <label>Cargo a</label>
+            <input type="text" class="form-control" id="cargo" />
+        </div>
+        <div class="col-md-3">
+            <label>Recibe</label>
+            <input type="text" class="form-control" id="recibe" />
+        </div>
+        <div class="col-md-3">
+            <label>Solicita</label>
+            <input type="text" class="form-control" id="solicita" />
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label>Embarque</label>
+        <input type="text" class="form-control" id="embarque" />
+    </div>
+
+    <div class="mb-3">
+        <label>Notas internas</label>
+        <textarea class="form-control" id="notas_internas"></textarea>
+    </div>
+
+    <div class="mb-3">
+        <label>Notas proveedor</label>
+        <textarea class="form-control" id="notas_proveedor"></textarea>
+    </div>
+
+    <div class="text-end">
+        <p><strong>Subtotal: </strong><span id="subtotal">0</span></p>
+        <p><strong>Impuestos: </strong><span id="impTotal">0</span></p>
+        <p><strong>Total: </strong><span id="totalGeneral">0</span></p>
+    </div>
+
+    <button class="btn btn-primary" id="registrar">Registrar Orden</button>
+
+</div>
+
+
+
+<!-- LISTA DE ÓRDENES -->
+<div class="container bg-white p-4 rounded shadow mt-5">
+    <h3 class="mb-4">Órdenes registradas</h3>
+
+    <table id="tablaOrdenes" class="display table table-striped" style="width:100%">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Fecha</th>
+                <th>Proveedor</th>
+                <th>Emisor</th>
+                <th>Total</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody id="contenidoOrdenes">
+        </tbody>
+    </table>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+
+<script>
+
+/* ✅ CÁLCULOS */
+function recalcular(){
+    let subtotal = 0;
+    $("#tablaDetalles tbody tr").each(function(){
+        const cantidad = parseFloat($(this).find('.cantidad').val()) || 0;
+        const precio = parseFloat($(this).find('.precio').val()) || 0;
+        const total = cantidad * precio;
+        $(this).find('.total').val(total);
+        subtotal += total;
+    });
+
+    $('#subtotal').text(subtotal);
+    const iva = parseFloat($('#iva').val()) || 0;
+    const montoIVA = subtotal * (iva/100);
+    $('#monto_iva').val(montoIVA);
+    $('#impTotal').text(montoIVA);
+    $('#totalGeneral').text(subtotal + montoIVA);
+}
+
+$(document).on('input', '.cantidad, .precio, #iva', recalcular);
+
+
+/* ✅ NUEVA FILA */
+$('#nuevaFila').click(function(){
+    $('#tablaDetalles tbody').append(`
+        <tr>
+            <td><input type="number" class="form-control cantidad" value="1" /></td>
+            <td><input type="text" class="form-control producto" /></td>
+            <td><input type="number" class="form-control precio" value="0" /></td>
+            <td><input type="number" class="form-control total" readonly /></td>
+            <td><button class="btn btn-danger btn-sm borrarFila">X</button></td>
+        </tr>`);
+});
+
+$(document).on('click', '.borrarFila', function(){
+    $(this).closest('tr').remove();
+    recalcular();
+});
+
+
+/* ✅ CARGAR ÓRDENES */
+function cargarOrdenes() {
+    $.ajax({
+        url: "cargar_ordenes.php",
+        method: "GET",
+        success: function(res) {
+
+            const datos = JSON.parse(res);
+            let html = "";
+
+            datos.forEach(o => {
+                html += `
+                    <tr>
+                        <td>${o.id}</td>
+                        <td>${o.fecha}</td>
+                        <td>${o.proveedor}</td>
+                        <td>${o.emisor}</td>
+                        <td>$${o.total}</td>
+
+                        <td>
+                            <select class="form-select form-select-sm cambiarEstado" data-id="${o.id}">
+                                <option value="EN DEUDA" ${o.estado == 'EN DEUDA' ? 'selected' : ''}>En deuda</option>
+                                <option value="PAGADO" ${o.estado == 'PAGADO' ? 'selected' : ''}>Pagado</option>
+                            </select>
+                        </td>
+
+                    </tr>
+                `;
+            });
+
+            $("#contenidoOrdenes").html(html);
+
+            $("#tablaOrdenes").DataTable();
+        }
+    });
+}
+
+cargarOrdenes();
+
+
+/* ✅ REGISTRAR ORDEN */
+$('#registrar').click(function () {
+
+    let detalle = [];
+
+    $("#tablaDetalles tbody tr").each(function(){
+        detalle.push({
+            cantidad: $(this).find('.cantidad').val(),
+            producto: $(this).find('.producto').val(),
+            precio: $(this).find('.precio').val(),
+            total: $(this).find('.total').val()
+        });
+    });
+
+    let data = {
+        emisor: $('#emisor').val(),
+        proveedor: $('#proveedor').val(),
+        dias: $('#dias_credito').val(),
+        moneda: $('#moneda').val(),
+        consumir: $('input[name=consumir]:checked').val(),
+        factura: $('#factura').val(),
+        cargo: $('#cargo').val(),
+        recibe: $('#recibe').val(),
+        solicita: $('#solicita').val(),
+        embarque: $('#embarque').val(),
+        notas_internas: $('#notas_internas').val(),
+        notas_proveedor: $('#notas_proveedor').val(),
+        subtotal: $('#subtotal').text(),
+        impuestos: $('#impTotal').text(),
+        total: $('#totalGeneral').text(),
+        detalle: JSON.stringify(detalle)
+    };
+
+    $.ajax({
+        url: "guardar_orden.php",
+        method: "POST",
+        data: data,
+        success: function(res) {
+            if(res.trim() === "OK"){
+                alert("Orden registrada");
+                cargarOrdenes();
+            } else {
+                alert("Error: " + res);
+            }
+        },
+        error: function() {
+            alert("NO SE PUDO CONECTAR CON EL SERVIDOR");
+        }
+    });
+
+});
+
+/* ✅ CAMBIO DE ESTADO — CORRECTO */
+$(document).on("change", ".cambiarEstado", function () {
+
+    let id = $(this).attr("data-id");
+    let estado = $(this).val();
+
+    $.ajax({
+        url: "cambiar_estado.php",
+        method: "POST",
+        data: { id: id, estado: estado },
+        success: function (res) {
+
+            if(res.trim() === "OK"){
+
+                // ✅ SI LA ORDEN SE PAGA, MOVER INSUMOS
+                if(estado === "PAGADO"){
+                    $.ajax({
+                        url: "mover_insumos.php",
+                        method: "POST",
+                        data: { id: id },
+                        success: function(res2){
+                            alert("Insumos movidos correctamente");
+                            console.log(res2);
+                        }
+                    });
+                }
+
+                cargarOrdenes();
+            }
+
+        }
+    });
+
+});
+</script>
+
+</body>
+</html>
+
